@@ -36,14 +36,9 @@ namespace DrV3Debate
                 line = reader.ReadLine();
             return line;
         }
-        internal const int Voice_Align = 82; // Todo: Figure out padding 
-        internal static long Get_Padding(long offset, int align = Voice_Align)
+        internal static long Get_Padding(long offset, int align = 0x16)
         {
             return ((align - (offset % align)) % align);
-        }
-        internal static long Get_Aligned(long offset, int align = Voice_Align)
-        {
-            return offset + Get_Padding(offset, align);
         }
     }
 }

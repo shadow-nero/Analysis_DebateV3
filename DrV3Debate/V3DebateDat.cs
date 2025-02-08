@@ -68,7 +68,7 @@ namespace DrV3Debate
 
             writer.WriteLine($"--Voice Effects--");
             for (int i = 0; i < VoiceEffects.Count; i++)
-                writer.WriteLine($"{i}: {VoiceEffects[i]}");
+                writer.WriteLine($"{VoiceEffects[i]}");
 
             writer.Dispose();
             writer.Close();
@@ -100,14 +100,18 @@ namespace DrV3Debate
                 sectionStream.Position = 0;
                 sectionStream.CopyTo(fs);
             }
-
+            int x = 0;
             while (!reader.EndOfStream) // Write all voice effect lines in, TODO: PAdding
             {
                 string line = V3DebateDatUtil.ReadLine(reader);
                 if (line == null) break;
-                if (!line.Contains(": ")) continue;
-                fs.Write(Encoding.UTF8.GetBytes(line.Split(": ")[1]));
-                fs.Position += V3DebateDatUtil.Get_Padding(fs.Position);
+                if (line.StartsWith("--")) continue;
+                var textbytes = Encoding.UTF8.GetBytes(line);
+                Array.Resize(ref textbytes, 64);
+                fs.Write(textbytes);
+                if (x != 0)
+                    fs.Position += V3DebateDatUtil.Get_Padding(fs.Position, 64);
+                x++;
             }
             reader.Dispose();
             reader.Close();
