@@ -7,6 +7,7 @@ namespace DrV3Debate
         private Stream stream;
 
         public ushort Time;
+        public byte UnknownValue0;
         public ushort[] UnknownValues;
         public List<V3DebateSection> Sections = new List<V3DebateSection>();
         public List<string> VoiceEffects = new List<string>();
@@ -32,10 +33,10 @@ namespace DrV3Debate
 
             ushort NumberOfSections = reader.ReadByte();
 
-
+            UnknownValue0 = reader.ReadByte();
             UnknownValues = new ushort[5];
 
-            for (byte i = 0; i < 5; i++)
+            for (byte i = 0; i < 4; i++)
                 UnknownValues[i] = reader.ReadUInt16();
 
             for (ushort i = 0; i < NumberOfSections; i++)
@@ -54,17 +55,19 @@ namespace DrV3Debate
 
             writer.WriteLine($"Time: {Time}");
             writer.WriteLine($"NumberOfSections: {Sections.Count}");
+            writer.WriteLine($"UnknownValue0: {UnknownValue0}");
             for (byte i = 0; i < UnknownValues.Length; i++)
-                writer.WriteLine($"UnknownValue{i}: {UnknownValues[i]}");
+                writer.WriteLine($"UnknownValue{i+1}: {UnknownValues[i]}");
             for (ushort i = 0; i < Sections.Count; i++)
             {
                 var section = Sections[i];
                 writer.WriteLine($"--Section {i} --");
-                writer.WriteLine($"     DialougeId: {section.DialogueId}");
-                writer.WriteLine($"     SectionId: {section.SectionId}");
-                writer.WriteLine($"     DifficultyId: {section.Difficulty}");
-                foreach (var a in section.UnknownData)
-                    writer.WriteLine($"     Unknown: {a}");
+                section.ExportToString( writer, "\t");
+                /*writer.WriteLine($"     DialougeId: {section.ID_Dialouge}");
+                writer.WriteLine($"     SectionId: {section.ID_Section}");
+                writer.WriteLine($"     DifficultyId: {section.ID_CHK}");
+                foreach (var a in section.Data)
+                    writer.WriteLine($"     Unknown: {a}");*/
             }
             writer.WriteLine($"--Voice Effects--");
             for (int i=0; i< VoiceEffects.Count; i++)
