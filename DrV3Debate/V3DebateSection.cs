@@ -1,31 +1,20 @@
-﻿
-namespace DrV3Debate
+﻿namespace DrV3Debate
 {
-
     public class V3DebateSection
     {
-        public ushort ID_Dialouge;
-        public ushort ID_Section;
+        public ushort ID_Dialouge { get { return Data[0]; } }
+
         public List<ushort> Data = new List<ushort>();
         public V3DebateSection() { }
         public V3DebateSection(BinaryReader reader)
         {
-            ID_Dialouge = BitConverter.ToUInt16(reader.ReadBytes(2));
-            ID_Section = BitConverter.ToUInt16(reader.ReadBytes(2));
-            Data.Add(ID_Dialouge);
-            Data.Add(ID_Section);
-            for (int i = 0; i < (200); i++)
-            {
-                byte[] buffer = reader.ReadBytes(2);
-                if (buffer.Length < 2)
-                    return;
-                Data.Add(BitConverter.ToUInt16(buffer));
-            }
+            for (int i = 0; i < 202; i++)
+                Data.Add(BitConverter.ToUInt16(reader.ReadBytes(2)));
         }
 
         public void ExportToString(StreamWriter writer, string prefix = "")
         {
-            int unk = 1;
+            ushort unk = 1;
             for (ushort i = 0; i < Data.Count; i++)
             {
                 writer.WriteLine($"{prefix}{(ValueNames.ContainsKey(i) ? ValueNames[i] : $"Unk{unk}")}: {Data[i]}");
@@ -35,11 +24,8 @@ namespace DrV3Debate
         public static V3DebateSection ReadFromString(StreamReader reader)
         {
             V3DebateSection section = new();
-            section.ID_Dialouge = V3DebateDatUtil.ReadStringUshortValue(V3DebateDatUtil.ReadLine(reader));
-            section.ID_Section = V3DebateDatUtil.ReadStringUshortValue(V3DebateDatUtil.ReadLine(reader));
-            section.Data.Add(section.ID_Dialouge);
-            section.Data.Add(section.ID_Section);
-            for (ushort i=0;i<200;i++)
+
+            for (ushort i=0;i<202;i++)
                 section.Data.Add(V3DebateDatUtil.ReadStringUshortValue(V3DebateDatUtil.ReadLine(reader)));
 
             return section;
@@ -47,11 +33,8 @@ namespace DrV3Debate
         public Stream ToStream()
         {
             Stream stream = new MemoryStream();
-            stream.Position = 0;
             foreach (var a in Data)
-            {
                 stream.Write(BitConverter.GetBytes(a));
-            }
             return stream;
         }
 

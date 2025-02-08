@@ -18,31 +18,25 @@ namespace DrV3Debate
             if (stringBytes.Count == 0) return null;
             return Encoding.UTF8.GetString(stringBytes.ToArray());
         }
-
+       
         internal static ushort ReadStringUshortValue(string inp)
         {
-            if (inp == null || !inp.Contains(": "))
-                return 0;
-            string val = inp.Split(": ")[1];
-            return ushort.Parse(val);
+            if (inp == null || !inp.Contains(": ")) return 0;
+            return ushort.Parse(inp.Split(": ")[1]);
         }
         internal static byte ReadStringByteValue(string inp)
         {
-            if (inp == null || !inp.Contains(": "))
-                return 0;
-            string val = inp.Split(": ")[1];
-            return byte.Parse(val);
+            if (inp == null || !inp.Contains(": ")) return 0;
+            return byte.Parse(inp.Split(": ")[1]);
         }
         internal static string? ReadLine(StreamReader reader)
         {
             string? line = line = reader.ReadLine();
-            while (reader.BaseStream.Position < reader.BaseStream.Length && line.StartsWith("--"))
-            {
+            while (reader.BaseStream.Position < reader.BaseStream.Length && line.StartsWith("--") && line != null)
                 line = reader.ReadLine();
-            }
             return line;
         }
-        internal const int Voice_Align = 82;
+        internal const int Voice_Align = 82; // Todo: Figure out padding 
         internal static long Get_Padding(long offset, int align = Voice_Align)
         {
             return ((align - (offset % align)) % align);
