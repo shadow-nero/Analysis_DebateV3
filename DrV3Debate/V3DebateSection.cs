@@ -32,6 +32,28 @@ namespace DrV3Debate
                 if (!ValueNames.ContainsKey(i)) { unk++; };
             }
         }
+        public static V3DebateSection ReadFromString(StreamReader reader)
+        {
+            V3DebateSection section = new();
+            section.ID_Dialouge = V3DebateDatUtil.ReadStringUshortValue(V3DebateDatUtil.ReadLine(reader));
+            section.ID_Section = V3DebateDatUtil.ReadStringUshortValue(V3DebateDatUtil.ReadLine(reader));
+            section.Data.Add(section.ID_Dialouge);
+            section.Data.Add(section.ID_Section);
+            for (ushort i=0;i<200;i++)
+                section.Data.Add(V3DebateDatUtil.ReadStringUshortValue(V3DebateDatUtil.ReadLine(reader)));
+
+            return section;
+        }
+        public Stream ToStream()
+        {
+            Stream stream = new MemoryStream();
+            stream.Position = 0;
+            foreach (var a in Data)
+            {
+                stream.Write(BitConverter.GetBytes(a));
+            }
+            return stream;
+        }
 
         public static Dictionary<ushort, string> ValueNames = new()
         {
