@@ -25,6 +25,7 @@ namespace DrV3Debate
         {
             Sections.Clear();
             VoiceEffects.Clear();
+            UnknownValues = new ushort[5];
 
             stream.Position = 0;
             using BinaryReader reader = new BinaryReader(stream);
@@ -32,19 +33,16 @@ namespace DrV3Debate
             Time = reader.ReadUInt16();
 
             ushort NumberOfSections = reader.ReadByte();
-
-          
-            UnknownValues = new ushort[5];
-            UnknownValues[0] = reader.ReadByte();
-            for (byte i = 1; i < 5; i++)
-                UnknownValues[i] = reader.ReadUInt16();
+    
+            for (byte i = 0; i < 5; i++)
+                UnknownValues[i] = i==0 ? reader.ReadByte() : reader.ReadUInt16();
 
             for (ushort i = 0; i < NumberOfSections; i++) // Read Individual Dialogue Sections
                 Sections.Add(new V3DebateSection(reader));
 
             while (reader.BaseStream.Position < reader.BaseStream.Length) // Read voice effect strings
             {
-                string str = V3DebateDatUtil.ReadDatString(reader); // Note for eventual repacking, strings might have padding
+                string str = V3DebateDatUtil.ReadDatString(reader);
                 if (str == null) break;
                 VoiceEffects.Add(str);
             }
@@ -96,10 +94,9 @@ namespace DrV3Debate
             for (byte i=0; i<numOfSections; i++) // Text sections
             {
                 var sectionStream = V3DebateSection.ReadFromString(reader).ToStream();
-                sectionStream.Position = 0;
                 sectionStream.CopyTo(fs);sectionStream.Dispose();sectionStream.Close();
             }
-            while (!reader.EndOfStream) // Write all voice effect lines in, TODO: PAdding
+            while (!reader.EndOfStream) // Write all voice effect lines in
             {
                 string line = V3DebateDatUtil.ReadLine(reader);
                 if (line == null) break;

@@ -31,6 +31,7 @@
             Stream stream = new MemoryStream();
             foreach (var a in Data)
                 stream.Write(BitConverter.GetBytes(a));
+            stream.Position = 0;
             return stream;
         }
 
