@@ -22,22 +22,14 @@ namespace DrV3Debate
         internal static ushort ReadStringUshortValue(string inp)
         {
             if (inp == null || !inp.Contains(": "))
-            {
-                Console.WriteLine("ERROR WHEN READING USHORT STRING");
-                Console.Error.WriteLine("ERROR");
                 return 0;
-            }
             string val = inp.Split(": ")[1];
             return ushort.Parse(val);
         }
         internal static byte ReadStringByteValue(string inp)
         {
             if (inp == null || !inp.Contains(": "))
-            {
-                Console.WriteLine("ERROR WHEN READING BYTE STRING");
-                Console.Error.WriteLine("ERROR");
                 return 0;
-            }
             string val = inp.Split(": ")[1];
             return byte.Parse(val);
         }
@@ -50,11 +42,12 @@ namespace DrV3Debate
             }
             return line;
         }
-        internal static long Get_Padding(long offset, int align = 0x10)
+        internal const int Voice_Align = 82;
+        internal static long Get_Padding(long offset, int align = Voice_Align)
         {
             return ((align - (offset % align)) % align);
         }
-        internal static long Get_Aligned(long offset, int align = 0x10)
+        internal static long Get_Aligned(long offset, int align = Voice_Align)
         {
             return offset + Get_Padding(offset, align);
         }

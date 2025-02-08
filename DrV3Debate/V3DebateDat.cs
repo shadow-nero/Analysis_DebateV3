@@ -99,9 +99,8 @@ namespace DrV3Debate
                 var sectionStream = V3DebateSection.ReadFromString(reader).ToStream();
                 sectionStream.Position = 0;
                 sectionStream.CopyTo(fs);
-                Console.WriteLine("Finished writing section " + i);
             }
-            Console.WriteLine("Finished writing sections");
+
             while (!reader.EndOfStream) // Write all voice effect lines in, TODO: PAdding
             {
                 string line = V3DebateDatUtil.ReadLine(reader);
@@ -110,7 +109,7 @@ namespace DrV3Debate
                 line = line.Split(": ")[1];
                 Console.WriteLine(line);
                 fs.Write(Encoding.UTF8.GetBytes(line));
-                fs.Position += V3DebateDatUtil.Get_Padding(fs.Position, 72) + V3DebateDatUtil.Get_Padding(line.Length, 72); ; // Incorrect padding
+                fs.Position += V3DebateDatUtil.Get_Padding(fs.Position);
             }
             reader.Dispose();
             reader.Close();
