@@ -79,7 +79,7 @@ namespace DrV3Debate
             if (outPath == "") outPath = filePath.Replace(".txt", ".dat");
             StreamReader reader = new StreamReader(filePath);
             FileStream fs = new FileStream(outPath, FileMode.Create, FileAccess.Write);
-            
+  
             //Time
             fs.Write(BitConverter.GetBytes(
                 V3DebateDatUtil.ReadStringUshortValue(V3DebateDatUtil.ReadLine(reader))));
@@ -99,19 +99,18 @@ namespace DrV3Debate
                 var sectionStream = V3DebateSection.ReadFromString(reader).ToStream();
                 sectionStream.Position = 0;
                 sectionStream.CopyTo(fs);
+                Console.WriteLine("Finished writing section " + i);
             }
-            List<string> voiceDataEffects = new List<string>();
-            while (!reader.EndOfStream)
+            Console.WriteLine("Finished writing sections");
+            while (!reader.EndOfStream) // Write all voice effect lines in, TODO: PAdding
             {
-                string line = reader.ReadLine();
+                string line = V3DebateDatUtil.ReadLine(reader);
+                if (line == null) break;
                 if (!line.Contains(": ")) continue;
-
-                voiceDataEffects.Add(line.Split(": ")[1]);
-            }
-            foreach (var a in voiceDataEffects)
-            {
-                Console.WriteLine(a);
-                fs.Write(Encoding.UTF8.GetBytes(a));
+                line = line.Split(": ")[1];
+                Console.WriteLine(line);
+                fs.Write(Encoding.UTF8.GetBytes(line));
+                fs.Position += V3DebateDatUtil.Get_Padding(fs.Position, 72) + V3DebateDatUtil.Get_Padding(line.Length, 72); ; // Incorrect padding
             }
             reader.Dispose();
             reader.Close();
