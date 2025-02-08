@@ -61,15 +61,17 @@ namespace DrV3Debate
 
             for (byte i = 0; i < UnknownValues.Length; i++)
                 writer.WriteLine($"UnknownValue{i + 1}: {UnknownValues[i]}");
+
             for (ushort i = 0; i < Sections.Count; i++)
             {
-                var section = Sections[i];
                 writer.WriteLine($"--Section {i} --");
-                section.ExportToString(writer, "\t");
+                Sections[i].ExportToString(writer, "\t");
             }
+
             writer.WriteLine($"--Voice Effects--");
             for (int i = 0; i < VoiceEffects.Count; i++)
                 writer.WriteLine($"{i}: {VoiceEffects[i]}");
+
             writer.Dispose();
             writer.Close();
         }
@@ -106,9 +108,7 @@ namespace DrV3Debate
                 string line = V3DebateDatUtil.ReadLine(reader);
                 if (line == null) break;
                 if (!line.Contains(": ")) continue;
-                line = line.Split(": ")[1];
-                Console.WriteLine(line);
-                fs.Write(Encoding.UTF8.GetBytes(line));
+                fs.Write(Encoding.UTF8.GetBytes(line.Split(": ")[1]));
                 fs.Position += V3DebateDatUtil.Get_Padding(fs.Position);
             }
             reader.Dispose();

@@ -14,12 +14,8 @@
 
         public void ExportToString(StreamWriter writer, string prefix = "")
         {
-            ushort unk = 1;
             for (ushort i = 0; i < Data.Count; i++)
-            {
-                writer.WriteLine($"{prefix}{(ValueNames.ContainsKey(i) ? ValueNames[i] : $"Unk{unk}")}: {Data[i]}");
-                if (!ValueNames.ContainsKey(i)) { unk++; };
-            }
+                writer.WriteLine($"{prefix}{(ValueNames.ContainsKey(i) ? ValueNames[i] : $"Unk{i-4}")}: {Data[i]}");
         }
         public static V3DebateSection ReadFromString(StreamReader reader)
         {
