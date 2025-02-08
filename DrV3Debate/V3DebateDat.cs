@@ -81,8 +81,7 @@ namespace DrV3Debate
             FileStream fs = new FileStream(outPath, FileMode.Create, FileAccess.Write);
   
             //Time
-            fs.Write(BitConverter.GetBytes(
-                V3DebateDatUtil.ReadStringUshortValue(V3DebateDatUtil.ReadLine(reader))));
+            fs.Write(BitConverter.GetBytes(V3DebateDatUtil.ReadStringUshortValue(V3DebateDatUtil.ReadLine(reader))));
 
             //Number of sections
             byte numOfSections = V3DebateDatUtil.ReadStringByteValue(V3DebateDatUtil.ReadLine(reader));
@@ -94,13 +93,12 @@ namespace DrV3Debate
             for (byte i = 0; i < 4; i++)
                 fs.Write(BitConverter.GetBytes(V3DebateDatUtil.ReadStringUshortValue(V3DebateDatUtil.ReadLine(reader))));
 
-            for (byte i=0; i<numOfSections; i++)
+            for (byte i=0; i<numOfSections; i++) // Text sections
             {
                 var sectionStream = V3DebateSection.ReadFromString(reader).ToStream();
                 sectionStream.Position = 0;
-                sectionStream.CopyTo(fs);
+                sectionStream.CopyTo(fs);sectionStream.Dispose();sectionStream.Close();
             }
-            int x = 0;
             while (!reader.EndOfStream) // Write all voice effect lines in, TODO: PAdding
             {
                 string line = V3DebateDatUtil.ReadLine(reader);
@@ -109,9 +107,6 @@ namespace DrV3Debate
                 var textbytes = Encoding.UTF8.GetBytes(line);
                 Array.Resize(ref textbytes, 64);
                 fs.Write(textbytes);
-                if (x != 0)
-                    fs.Position += V3DebateDatUtil.Get_Padding(fs.Position, 64);
-                x++;
             }
             reader.Dispose();
             reader.Close();
