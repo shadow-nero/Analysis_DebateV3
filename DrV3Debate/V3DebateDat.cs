@@ -7,7 +7,6 @@ namespace DrV3Debate
         private Stream stream;
 
         public ushort Time;
-        public byte UnknownValue0;
         public ushort[] UnknownValues;
         public List<V3DebateSection> Sections = new List<V3DebateSection>();
         public List<string> VoiceEffects = new List<string>();
@@ -34,10 +33,10 @@ namespace DrV3Debate
 
             ushort NumberOfSections = reader.ReadByte();
 
-            UnknownValue0 = reader.ReadByte();
-            UnknownValues = new ushort[4];
-
-            for (byte i = 0; i < 4; i++)
+          
+            UnknownValues = new ushort[5];
+            UnknownValues[0] = reader.ReadByte();
+            for (byte i = 1; i < 5; i++)
                 UnknownValues[i] = reader.ReadUInt16();
 
             for (ushort i = 0; i < NumberOfSections; i++) // Read Individual Dialogue Sections
@@ -57,10 +56,9 @@ namespace DrV3Debate
             writer.WriteLine($"--Header--");
             writer.WriteLine($"Time: {Time}");
             writer.WriteLine($"NumberOfSections: {Sections.Count}");
-            writer.WriteLine($"UnknownValue0: {UnknownValue0}");
 
             for (byte i = 0; i < UnknownValues.Length; i++)
-                writer.WriteLine($"UnknownValue{i + 1}: {UnknownValues[i]}");
+                writer.WriteLine($"UnknownValue{i}: {UnknownValues[i]}");
 
             for (ushort i = 0; i < Sections.Count; i++)
             {
