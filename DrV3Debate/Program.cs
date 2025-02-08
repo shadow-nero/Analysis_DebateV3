@@ -13,14 +13,14 @@ public partial class Program
         Console.WriteLine("Exporting Dat to TXT...");
         V3DebateDat dat = new(filePath);
         dat.Extract(outPath == "" ? filePath.Replace(".dat", ".txt") : outPath.Replace(".dat", ".txt"));
-        Console.WriteLine("Done!");
+        dat.Dispose();
+        Console.WriteLine("Finished Exporting to TXT!");
     }
     private static void Loop(string filePath, string outPath ="") 
     {
         if (Directory.Exists(filePath))
         {
-            if (outPath != "")
-                Directory.CreateDirectory(outPath);
+            if (outPath != "") { Directory.CreateDirectory(outPath); }
             foreach (var subFile in Directory.GetFiles(filePath))
                 ProcessFile(subFile, outPath != "" ? Path.Combine(outPath, Path.GetFileName(subFile)) : "");
             return;
@@ -37,12 +37,7 @@ public partial class Program
     {
         if (args.Length > 0)
         {
-            if (args.Length > 1)
-            {
-                Loop(args[0], args[1]);
-                return;
-            }
-            Loop(args[0]);
+            Loop(args[0], args.Length > 1 ? args[1] : "");
             return;
         }
         while (true)

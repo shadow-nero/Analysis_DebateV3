@@ -110,6 +110,13 @@ namespace DrV3Debate
             fs.Dispose();
             fs.Close();
         }
+
+        public void Dispose()
+        {
+            stream.Dispose();
+            stream.Close();
+            Sections.Clear();
+        }
     }
 
 }
